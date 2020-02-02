@@ -18,38 +18,38 @@ local AUX_ADV_IND = 0x07
 
 
 -- declare the fields
-local f_access_address = ProtoField.uint32("coded_phy.access_address", "Access Address", base.HEX)
-local hf_length = ProtoField.uint8("coded_phy.length", "Length", base.DEC)
+local f_access_address = ProtoField.uint32("btle_coded_phy.access_address", "Access Address", base.HEX)
+local hf_length = ProtoField.uint8("btle_coded_phy.length", "Length", base.DEC)
 
-local f_advertising_header = ProtoField.string("coded_phy.advertising_header", "Advertising header")
+local f_advertising_header = ProtoField.string("btle_coded_phy.advertising_header", "Advertising header")
 
-local hf_advertising_header = ProtoField.uint16("coded_phy.advertising_header", "Packet Header", base.HEX)
-local hf_advertising_header_pdu_type = ProtoField.uint8("coded_phy.advertising_header.pdu_type", "PDU Type", base.HEX)
-local hf_advertising_header_rfu_1 = ProtoField.uint8("coded_phy.advertising_header.rfu.1", "RFU", base.DEC)
-local hf_advertising_header_ch_sel = ProtoField.uint8("coded_phy.advertising_header.ch_sel", "Channel Selection Algorithm", base.HEX)
-local hf_advertising_header_randomized_tx = ProtoField.uint8("coded_phy.advertising_header.randomized_tx", "Tx Address", base.HEX)
-local hf_advertising_header_randomized_rx = ProtoField.uint8("coded_phy.advertising_header.randomized_rx", "Rx Address", base.HEX)
-local hf_advertising_header_reserved = ProtoField.uint8("coded_phy.advertising_header.reserved", "Reserved", base.HEX)
-local hf_advertising_header_length = ProtoField.uint8("coded_phy.advertising_header.length", "Length", base.DEC)
+local hf_advertising_header = ProtoField.uint16("btle_coded_phy.advertising_header", "Packet Header", base.HEX)
+local hf_advertising_header_pdu_type = ProtoField.uint8("btle_coded_phy.advertising_header.pdu_type", "PDU Type", base.HEX)
+local hf_advertising_header_rfu_1 = ProtoField.uint8("btle_coded_phy.advertising_header.rfu.1", "RFU", base.DEC)
+local hf_advertising_header_ch_sel = ProtoField.uint8("btle_coded_phy.advertising_header.ch_sel", "Channel Selection Algorithm", base.HEX)
+local hf_advertising_header_randomized_tx = ProtoField.uint8("btle_coded_phy.advertising_header.randomized_tx", "Tx Address", base.HEX)
+local hf_advertising_header_randomized_rx = ProtoField.uint8("btle_coded_phy.advertising_header.randomized_rx", "Rx Address", base.HEX)
+local hf_advertising_header_reserved = ProtoField.uint8("btle_coded_phy.advertising_header.reserved", "Reserved", base.HEX)
+local hf_advertising_header_length = ProtoField.uint8("btle_coded_phy.advertising_header.length", "Length", base.DEC)
 
-local hf_advertising_extended_header = ProtoField.uint8("coded_phy.advertising_header.extended_header", "Extended header", base.HEX)
-local hf_advertising_extended_header_length = ProtoField.uint8("coded_phy.advertising_header.extended_header_length", "Extended header length", base.DEC)
-local hf_advertising_extended_header_advmode = ProtoField.uint8("coded_phy.advertising_header.extended_header_advmode", "AdvMode", base.HEX)
+local hf_advertising_extended_header = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header", "Extended header", base.HEX)
+local hf_advertising_extended_header_length = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_length", "Extended header length", base.DEC)
+local hf_advertising_extended_header_advmode = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_advmode", "AdvMode", base.HEX)
 
-local hf_advertising_extended_header_payload = ProtoField.bytes("coded_phy.advertising_header.extended_header_payload", "Extended header payload")
-local hf_advertising_extended_header_payload_flags = ProtoField.uint8("coded_phy.advertising_header.extended_header_payload.flags", "Extended header flags", base.HEX)
-local hf_advertising_extended_header_payload_adva = ProtoField.ether("coded_phy.advertising_header.extended_header_payload.adva", "AdvA")
-local hf_advertising_extended_header_payload_targeta = ProtoField.ether("coded_phy.advertising_header.extended_header_payload.targeta", "TargetA")
-local hf_advertising_extended_header_payload_cteinfo = ProtoField.uint8("coded_phy.advertising_header.extended_header_payload.cteinfo", "CTEInfo", base.HEX)
-local hf_advertising_extended_header_payload_adi = ProtoField.uint16("coded_phy.advertising_header.extended_header_payload.adi", "ADI", base.HEX)
-local hf_advertising_extended_header_payload_auxptr = ProtoField.bytes("coded_phy.advertising_header.extended_header_payload.auxptr", "AuxPtr")
-local hf_advertising_extended_header_payload_syncinfo = ProtoField.bytes("coded_phy.advertising_header.extended_header_payload.syncinfo", "SyncInfo")
-local hf_advertising_extended_header_payload_txpower = ProtoField.uint8("coded_phy.advertising_header.extended_header_payload.txpower", "TxPower", base.DEC)
-local hf_advertising_extended_header_payload_rfu = ProtoField.uint8("coded_phy.advertising_header.extended_header_payload.rfu", "RFU", base.DEC)
+local hf_advertising_extended_header_payload = ProtoField.bytes("btle_coded_phy.advertising_header.extended_header_payload", "Extended header payload")
+local hf_advertising_extended_header_payload_flags = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_payload.flags", "Extended header flags", base.HEX)
+local hf_advertising_extended_header_payload_adva = ProtoField.ether("btle_coded_phy.advertising_header.extended_header_payload.adva", "AdvA")
+local hf_advertising_extended_header_payload_targeta = ProtoField.ether("btle_coded_phy.advertising_header.extended_header_payload.targeta", "TargetA")
+local hf_advertising_extended_header_payload_cteinfo = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_payload.cteinfo", "CTEInfo", base.HEX)
+local hf_advertising_extended_header_payload_adi = ProtoField.uint16("btle_coded_phy.advertising_header.extended_header_payload.adi", "ADI", base.HEX)
+local hf_advertising_extended_header_payload_auxptr = ProtoField.bytes("btle_coded_phy.advertising_header.extended_header_payload.auxptr", "AuxPtr")
+local hf_advertising_extended_header_payload_syncinfo = ProtoField.bytes("btle_coded_phy.advertising_header.extended_header_payload.syncinfo", "SyncInfo")
+local hf_advertising_extended_header_payload_txpower = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_payload.txpower", "TxPower", base.DEC)
+local hf_advertising_extended_header_payload_rfu = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_payload.rfu", "RFU", base.DEC)
 
-local hf_advertising_extended_header_flags = ProtoField.uint8("coded_phy.advertising_header.extended_header_flags", "Extended header flags", base.HEX)
+local hf_advertising_extended_header_flags = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_flags", "Extended header flags", base.HEX)
 
-local hf_advertising_address = ProtoField.ether("coded_phy.advertising_address", "Advertising Address")
+local hf_advertising_address = ProtoField.ether("btle_coded_phy.advertising_address", "Advertising Address")
 
 
 coded_phy_proto.fields = { 
