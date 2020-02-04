@@ -95,7 +95,7 @@ function coded_phy_proto.dissector(buffer, pinfo, tree)
 
     local pdu_type = bit.band(buffer(offset, 1):uint(), 0x0F)
     -- The added plugin only handles extended advertisement, so ignore others (and let the original dissector do its job)
-    if ADV_EXT_IND ~= 0x07 then
+    if pdu_type ~= ADV_EXT_IND then
         t_btle_coded_phy:append_text(" (Not extended advertisement)")
         return
     end
