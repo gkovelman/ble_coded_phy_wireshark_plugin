@@ -46,6 +46,7 @@ local hf_advertising_extended_header_payload_auxptr = ProtoField.bytes("btle_cod
 local hf_advertising_extended_header_payload_syncinfo = ProtoField.bytes("btle_coded_phy.advertising_header.extended_header_payload.syncinfo", "SyncInfo")
 local hf_advertising_extended_header_payload_txpower = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_payload.txpower", "TxPower", base.DEC)
 local hf_advertising_extended_header_payload_rfu = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_payload.rfu", "RFU", base.DEC)
+local hf_advertising_extended_header_payload_acad = ProtoField.bytes("btle_coded_phy.advertising_header.extended_header_payload.acad", "ACAD")
 
 local hf_advertising_extended_header_flags = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_flags", "Extended header flags", base.HEX)
 
@@ -64,6 +65,7 @@ coded_phy_proto.fields = {
         hf_advertising_extended_header_payload_flags, hf_advertising_extended_header_payload_adva, hf_advertising_extended_header_payload_targeta, 
         hf_advertising_extended_header_payload_cteinfo, hf_advertising_extended_header_payload_adi,
         hf_advertising_extended_header_payload_auxptr, hf_advertising_extended_header_payload_syncinfo, hf_advertising_extended_header_payload_txpower, hf_advertising_extended_header_payload_rfu,
+        hf_advertising_extended_header_payload_acad,
 
     hf_advertising_address
 }
@@ -136,31 +138,42 @@ function coded_phy_proto.dissector(buffer, pinfo, tree)
     offset = offset + 1
 
     local t_advertising_extended_header_payload = t_advertising_header_item:add(hf_advertising_extended_header_payload, buffer(offset, extended_header_length))
+    local extended_header_cumulative_length = 0
 
     t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_flags, buffer(offset, 1))
     local advertising_extended_header_payload_flags = buffer(offset, 1):uint()
+    extended_header_cumulative_length = extended_header_cumulative_length + 1
     offset = offset + 1
 
     if bit.band(advertising_extended_header_payload_flags, 0x01) ~= 0 then
-        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_adva, buffer(offset, 6))
-        offset = offset + 6
+        local field_size = 6
+        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_adva, buffer(offset, field_size))
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
     end
     if bit.band(advertising_extended_header_payload_flags, 0x02) ~= 0 then
-        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_targeta, buffer(offset, 6))
-        offset = offset + 6
+        local field_size = 6
+        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_targeta, buffer(offset, field_size))
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
     end
     if bit.band(advertising_extended_header_payload_flags, 0x04) ~= 0 then
-        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_cteinfo, buffer(offset, 1))
-        offset = offset + 1
+        local field_size = 1
+        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_cteinfo, buffer(offset, field_size))
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
     end
     if bit.band(advertising_extended_header_payload_flags, 0x08) ~= 0 then
-        local t_advertising_extended_header_payload_adi = t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_adi, buffer(offset, 2))
-        local adi = buffer(offset, 2):uint()
+        local field_size = 2
+        local t_advertising_extended_header_payload_adi = t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_adi, buffer(offset, field_size))
+        local adi = buffer(offset, field_size):le_uint()
         t_advertising_extended_header_payload_adi:append_text(string.format( " (DID: %d, SID: %d)", bit.band(adi, 0x7F), bit.rshift(bit.band(adi, 0xF000), 12)))
-        offset = offset + 2
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
     end
     if bit.band(advertising_extended_header_payload_flags, 0x10) ~= 0 then
-        local t_advertising_extended_header_payload_auxptr = buffer(offset, 3)
+        local field_size = 3
+        local t_advertising_extended_header_payload_auxptr = buffer(offset, field_size)
         local offset_units = bit.rshift(bit.band(t_advertising_extended_header_payload_auxptr(0, 1):uint(), 0x80), 7)
         local CA = bit.rshift(bit.band(t_advertising_extended_header_payload_auxptr(0, 1):uint(), 0x40), 6)
         local channel_index = bit.rshift(bit.band(t_advertising_extended_header_payload_auxptr(0, 1):uint(), 0x3F), 0)
@@ -168,15 +181,25 @@ function coded_phy_proto.dissector(buffer, pinfo, tree)
         local AUX_offset = bit.rshift(bit.band(t_advertising_extended_header_payload_auxptr(1, 2):le_uint(), 0x1FFF), 0)
         local t_advertising_extended_header_payload_auxptr = t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_auxptr, t_advertising_extended_header_payload_auxptr)
         t_advertising_extended_header_payload_auxptr:append_text(string.format( " (ChIdx: %u, CA: %d, OffsetUnits: %d; AUX offset: %u, AUX PHY: %u)", channel_index, CA, offset_units, AUX_offset, AUX_PHY))
-        offset = offset + 3
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
     end
     if bit.band(advertising_extended_header_payload_flags, 0x20) ~= 0 then
-        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_syncinfo, buffer(offset, 18))
-        offset = offset + 18
+        local field_size = 18
+        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_syncinfo, buffer(offset, field_size))
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
     end
     if bit.band(advertising_extended_header_payload_flags, 0x40) ~= 0 then
-        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_txpower, buffer(offset, 1))
-        offset = offset + 1
+        local field_size = 1
+        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_txpower, buffer(offset, field_size))
+        extended_header_cumulative_length = extended_header_cumulative_length + field_size
+        offset = offset + field_size
+    end
+    if extended_header_cumulative_length ~= extended_header_length then
+        local remainder = extended_header_cumulative_length - extended_header_length
+        t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_acad, buffer(offset, remainder))
+        offset = offset + remainder
     end
 
 end
