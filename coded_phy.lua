@@ -50,6 +50,10 @@ local hf_advertising_extended_header_payload_acad = ProtoField.bytes("btle_coded
 
 local hf_advertising_extended_header_flags = ProtoField.uint8("btle_coded_phy.advertising_header.extended_header_flags", "Extended header flags", base.HEX)
 
+local hf_advertising_payload = ProtoField.bytes("btle_coded_phy.advertising_payload", "Advertisement payload")
+
+local hf_advertising_crc = ProtoField.bytes("btle_coded_phy.advertising_crc", "Advertisement CRC")
+
 local hf_advertising_address = ProtoField.ether("btle_coded_phy.advertising_address", "Advertising Address")
 
 
@@ -66,6 +70,10 @@ coded_phy_proto.fields = {
         hf_advertising_extended_header_payload_cteinfo, hf_advertising_extended_header_payload_adi,
         hf_advertising_extended_header_payload_auxptr, hf_advertising_extended_header_payload_syncinfo, hf_advertising_extended_header_payload_txpower, hf_advertising_extended_header_payload_rfu,
         hf_advertising_extended_header_payload_acad,
+    
+    hf_advertising_payload,
+
+    hf_advertising_crc,
 
     hf_advertising_address
 }
@@ -80,6 +88,8 @@ function coded_phy_proto.dissector(buffer, pinfo, tree)
     pinfo.cols['protocol'] = "BLE Coded PHY"
 
     local offset = 0
+
+    local rf_channel_index = buffer(offset, 1):uint()
 
     offset = offset + 2 + 2 + 4 + 2
     
@@ -201,6 +211,24 @@ function coded_phy_proto.dissector(buffer, pinfo, tree)
         t_advertising_extended_header_payload:add(hf_advertising_extended_header_payload_acad, buffer(offset, remainder))
         offset = offset + remainder
     end
+
+    local payload_length = hf_length - (extended_header_length + 1)
+    
+    if payload_length > 0 then
+        t_btle_coded_phy:add(hf_advertising_payload, buffer(offset, payload_length))
+
+        if rf_channel_index < 37 then
+
+        else
+
+        end
+
+        offset = offset + payload_length
+        
+    end
+
+    t_btle_coded_phy:add(hf_advertising_crc, buffer(offset, 3))
+
 
 end
 
