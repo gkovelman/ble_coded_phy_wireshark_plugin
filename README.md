@@ -12,7 +12,7 @@
 ---
 
 <p align="center"> 
-As of Wireshark 3.2.1, there's no support for parsing BLE5 extended advertisemnt. This plugin adds some support to be able to handle extended advertisemnt and coded PHY BLE5 packets.
+Still true for Wireshark 3.2.1, there's no support for parsing BLE5 extended advertisemnt. This plugin adds some support to be able to handle extended advertisemnt and coded PHY BLE5 packets.
     <br> 
 </p>
 
@@ -38,7 +38,7 @@ Tested with Wireshark 3.2.1.
 
 ### Installing
 
-Close this repository to your favorite Wireshark plugins directory. More info [here](https://www.wireshark.org/docs/wsug_html_chunked/ChPluginFolders.html)
+Clone this repository to your favorite Wireshark plugins directory. More info [here](https://www.wireshark.org/docs/wsug_html_chunked/ChPluginFolders.html)
 
 ## 🎈 Usage <a name="usage"></a>
 
